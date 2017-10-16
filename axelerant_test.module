@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Module File, consist all related hooks.
+ */
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_help().
+ */
+function axelerant_test_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.axelerant_test':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('This module alter site information setting form and provide a way to add Site API Key and also a custom URL which return JSON format of a valid node by validating the Site API key.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function axelerant_test_form_system_site_information_settings_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $site_config = \Drupal::config('system.site');
+  $form['site_information']['siteapikey'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Site API Key'),
+    '#default_value' => !empty($site_config->get('siteapikey')) ? $site_config->get('siteapikey') : 'No API Key yet',
+  );
+  $form['actions']['submit']['#value'] = t('Update Configuration');
+  $form['actions']['submit']['#submit'][] = 'axelerant_test_system_site_information_settings_form_submit';
+}
+
+/**
+ * Custom submit callback form system_site_information_settings_form.
+ *
+ * @param array $form
+ * @param FormStateInterface $form_state
+ */
+function axelerant_test_system_site_information_settings_form_submit($form, FormStateInterface $form_state){
+  $config = \Drupal::configFactory()->getEditable('system.site');
+  $config->set('siteapikey', $form_state->getValue('siteapikey'));
+  $config->save();
+  drupal_set_message(t('Site API Key has been saved successfully.'));
+}

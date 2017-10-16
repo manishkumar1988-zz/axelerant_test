@@ -1,0 +1,5 @@
+name: Axelerant test
+type: module
+description: 'Alter system config form and provide a menu to provide JSON output of a valid node.'
+package: Other
+core: 8.x

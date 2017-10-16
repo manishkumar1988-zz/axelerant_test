@@ -1,0 +1,7 @@
+axelerant_test.page_json:
+  path: '/page_json/{siteapikey}/{nid}'
+  defaults:
+    _controller: '\Drupal\axelerant_test\Controller\AxelerantTestController::content'
+    _title: 'Json Output'
+  requirements:
+    _custom_access:  '\Drupal\axelerant_test\Controller\AxelerantTestController::access'
